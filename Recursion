@@ -1,0 +1,278 @@
+//DSA-Recursion
+
+/*
+What is the input to the program?
+What is the output of the program?
+What is the input to each recursive call?
+What is the output of each recursive call?
+*/
+
+//1. Counting Sheep
+
+/*
+1) What is the input to the program? 3
+2) What is the output of the program? 3-1:  3: Another sheep jumps over the fence or All sheep jumped over the fence
+3) What is the input to each recursive call? n-1
+4) What is the output of each recursive call? one of the choices from #2
+*/
+
+
+function sheepCounter(sheep) {
+  if(sheep === 0){
+    console.log('All sheep jumped over the fence');
+  }
+  else{
+    console.log(`${sheep}: Another sheep jumps over the fence`);
+    sheepCounter(sheep-1);
+  }
+
+
+
+}
+
+sheepCounter(3);
+
+//---------------------------------------------------------
+// 2. Power Calculator
+
+/*
+What is the input to the program? 2 integers, one value, one positive exponent
+What is the output of the program? raised or error
+What is the input to each recursive call?
+What is the output of each recursive call?
+*/
+
+function powerCalc(value, exp) {
+  if (exp<0) {
+    return 'exponent should be >= 0';
+  }
+  else if(exp === 0){
+    return 1;
+  }
+  else if (exp === 1) {
+    return value;
+  }
+
+  return value * powerCalc(value, exp-1);
+
+}
+
+console.log(powerCalc(2, 4));
+
+
+//---------------------------------------------------------
+// 3. Reverse String
+
+function reverseString(s) {
+  if (s.length === 1) {
+    return s[0];
+  }
+
+  return s[s.length-1] + reverseString(s.slice(0,s.length-1));
+
+}
+
+console.log(reverseString('Elijah'));
+
+//---------------------------------------------------------
+//4. nth Triangular Number
+function tri(n) {
+  if (n <= 1) {
+    return n;
+  } else {
+    return n + tri(n - 1);
+  }
+}
+
+//---------------------------------------------------------
+//5. String Splitter
+
+function split(string, char, array = []) {
+
+  if (string.length == 0) {
+     return array;
+  }
+
+  let first = string[0];
+
+  if (first == '/') {
+    array.push('');
+  }
+
+  else if (array.length === 0) { 
+      array.splice(array.length, 1, first);
+  }
+
+  else{
+    array.splice(array.length - 1, 1, array[array.length - 1] + first);
+  }
+
+  return split( string.slice(1), char, array);
+
+}
+
+console.log(split('02/20/2020','/'));
+
+
+
+// 6. Fibonacci
+//---------------------------------------------------------
+
+// Write a recursive function that prints the Fibonacci sequence of a given number. The Fibonacci sequence is a series of numbers in which each number is the sum of the 2 preceding numbers. For example, the 7th Fibonacci number in a Fibonacci sequence is 13. The sequence looks as follows: 1, 1, 2, 3, 5, 8, 13.
+
+function fibonacci(n) {
+  if(n < 2) {
+    return n;
+  }
+
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log(fibonacci(10));
+
+
+// 7. Factorial
+//---------------------------------------------------------
+
+function factor(n, total = n) {
+
+  if (n == 1) {
+    return total * 1;
+  }
+
+  return factor(n - 1, total *= n - 1);
+}
+
+//or
+
+function factorial(n) {
+
+  if (n < 2) {
+    return n;
+  }
+
+  return n * factorial(n - 1);
+}
+
+
+console.log(factorial(6));
+console.log(factor(6));
+
+//---------------------------------------------------------
+//8. Find a way out of the maze
+
+
+let smallMaze = [
+    [' ', ' ', ' '],
+    [' ', '*', ' '],
+    [' ', ' ', 'e']
+];
+
+let bigMaze = [
+    [' ', ' ', ' ', '*', ' ', ' ', ' '],
+    ['*', '*', ' ', '*', ' ', '*', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', '*', '*', '*', '*', '*', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', 'e']
+];
+
+
+function escape(maze, x = 0, y = 0, gps = '') {
+  //check if at EXIT
+  if(maze[y][x] == 'e') {
+    return gps;
+  }
+  //Check if it can move RIGHT
+  else if (maze[y][x+1] == ' ' || maze[y][x+1] == 'e') { 
+    return escape(maze, x + 1, y, gps += 'R')
+  }
+  //Check if it can move DOWN
+  else if (maze[y+1][x] == ' ' || maze[y+1][x] == 'e') {
+    return escape(maze, x, y + 1, gps += 'D')
+  }
+
+}
+
+console.log(escape(smallMaze));
+
+
+//---------------------------------------------------------
+// 9. Find ALL the ways out of the maze
+
+function allEscapes(maze, traversedMaze = maze, x = 0, y = 0, gps = '') {
+
+
+
+//   //check if at EXIT
+  if(traversedMaze[y][x] == 'e'){
+    console.log('complete');
+    return gps;
+  }
+
+   //Check if it can move LEFT
+   if (traversedMaze[y][x - 1] == ' ' || traversedMaze[y][x - 1] == 'e') { 
+    traversedMaze[y][x] = '.';
+
+    return allEscapes(maze, traversedMaze, x - 1, y, gps += 'L')
+  }
+
+   //Check if it can move RIGHT
+  else if (traversedMaze[y][x + 1] == ' ' || traversedMaze[y][x + 1] == 'e') { 
+  
+    traversedMaze[y][x] = '.';
+
+    return allEscapes(maze, traversedMaze, x + 1, y, gps += 'R')
+  }
+
+//   //Check if it can move DOWN
+  else if (traversedMaze[y + 1][x] == ' ' || traversedMaze[y + 1][x] == 'e') {
+    traversedMaze[y][x] = '.';
+
+    return allEscapes(maze, traversedMaze, x, y + 1, gps += 'D')
+  }
+
+//   //Check if it can move UP
+  else if (traversedMaze[y - 1][x] == ' ' || traversedMaze[y - 1][x] == 'e') {
+    traversedMaze[y][x] = '.';
+
+    return allEscapes(maze, traversedMaze, x, y - 1, gps += 'U')
+  }
+
+}
+
+console.log(allEscapes(bigMaze));
+
+
+//10. Anagrams
+function anagram(word) {
+  let results = [];
+
+  if (word.length === 1) 
+  {
+    results.push(word);
+    return results;
+  }
+
+  for (let i = 0; i < word.length; i++) 
+  {
+    let firstChar = word[i];
+    let otherChar = word.substring(0, i) + word.substring(i + 1);
+    let otherPermutations = anagram(otherChar);
+    
+    for (let j = 0; j < otherPermutations.length; j++) {
+      results.push(firstChar + otherPermutations[j]);
+    }
+  }
+  return results.filter((el, idx, self) => (self.indexOf(el) === idx)).join(' ');
+}
+
+
+
+function toBinary(num) {
+  if (num === 0) { 
+    return 0
+  } else {
+    return num % 2 + 10 * toBinary(Math.floor(num/2))
+  }
+}
+
